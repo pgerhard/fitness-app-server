@@ -15,6 +15,24 @@ public class Exercise extends AbstractDocument<String> {
 
     private ExerciseType exerciseType;
 
+    /**
+     * Default constructor.
+     */
+    public Exercise () {
+    }
+
+    /**
+     * Constructor with all fields to allow querying by example
+     * @param name to set
+     * @param description to set
+     * @param exerciseType to set
+     */
+    public Exercise ( String name, String description, ExerciseType exerciseType ) {
+        this.name = name;
+        this.description = description;
+        this.exerciseType = exerciseType;
+    }
+
     public String getName () {
         return name;
     }

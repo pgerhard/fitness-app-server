@@ -4,6 +4,7 @@ import de.university.reutlingen.mobile.computing.fitnessappserver.boundary.Exerc
 import de.university.reutlingen.mobile.computing.fitnessappserver.control.ExerciseService;
 import de.university.reutlingen.mobile.computing.fitnessappserver.model.Exercise;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public class ExerciseManagementServiceImpl implements ExerciseManagementService {
 
@@ -16,5 +17,10 @@ public class ExerciseManagementServiceImpl implements ExerciseManagementService 
     @Override
     public Flux<Exercise> loadAll () {
         return exerciseService.findAll();
+    }
+
+    @Override
+    public Mono<Exercise> findOneByIdentifier ( String identifier ) {
+        return exerciseService.findOneByIdentifier(identifier);
     }
 }

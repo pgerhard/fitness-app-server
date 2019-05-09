@@ -5,6 +5,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
+/**
+ * Fitness app server main class.
+ *
+ * TODO Implement endpoint to load all exercise plans
+ * TODO Implement endpoint to load an exercise plan
+ */
 @SpringBootApplication
 @EnableConfigurationProperties ( value = {FitnessAppProperties.class} )
 public class FitnessAppServerApplication {

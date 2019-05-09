@@ -1,4 +1,6 @@
 package de.university.reutlingen.mobile.computing.fitnessappserver.model;
 
-public class ExerciseType {
+public enum ExerciseType {
+    SYSTEM,
+    USER
 }
