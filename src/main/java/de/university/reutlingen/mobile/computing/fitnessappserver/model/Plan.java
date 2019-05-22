@@ -5,7 +5,17 @@ import java.util.List;
 
 public class Plan extends AbstractDocument<String> {
 
+    private String name;
+
     private List<PlannedExercise> exerciseList;
+
+    public String getName () {
+        return name;
+    }
+
+    public void setName ( String name ) {
+        this.name = name;
+    }
 
     public List<PlannedExercise> getExerciseList () {
         return exerciseList;

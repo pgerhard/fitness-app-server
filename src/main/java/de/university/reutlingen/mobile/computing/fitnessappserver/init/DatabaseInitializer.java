@@ -4,6 +4,7 @@ package de.university.reutlingen.mobile.computing.fitnessappserver.init;
 import de.university.reutlingen.mobile.computing.fitnessappserver.control.ExerciseService;
 import de.university.reutlingen.mobile.computing.fitnessappserver.control.PlanService;
 import de.university.reutlingen.mobile.computing.fitnessappserver.model.*;
+import de.university.reutlingen.mobile.computing.fitnessappserver.repository.parameter.PlanSearchParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
@@ -24,6 +25,7 @@ public class DatabaseInitializer extends AbstractInitializationService {
     private static final String LAT_PULLDOWNS_NAME = "Lat Pulldowns";
     private static final String DUMBBELL_CURLS_NAME = "Dumbbell Curls";
     private static final String DECLINE_SIT_UP_NAME = "Decline Sit Up";
+    private static final String FULL_BODY_TRAINING_PLAN_NAME = "Basic full-body workout";
 
     private final ExerciseService exerciseService;
     private final PlanService planService;
@@ -57,8 +59,13 @@ public class DatabaseInitializer extends AbstractInitializationService {
         LOGGER.debug ( String.format ( "Exercise created:\n Name: %s\n ID: %s", exercise.getName (), exercise.getId () ) );
     }
 
+    private void logPlanInfo ( Plan plan ) {
+        LOGGER.debug ( String.format ( "Plan created:\n Name: %s\n ID: %s", plan.getName (), plan.getId () ) );
+    }
+
     private Mono<Plan> createOrUpdateFullBodyTrainingPlan ( Map<String, Exercise> exerciseList ) {
         final Plan plan = new Plan ();
+        plan.setName ( FULL_BODY_TRAINING_PLAN_NAME );
 
         // Planned Bench Press
         final PlannedExercise plannedBenchPress = new PlannedExercise ();
@@ -133,7 +140,13 @@ public class DatabaseInitializer extends AbstractInitializationService {
         plan.addPlannedExercise ( plannedDumbbellCurls );
         plan.addPlannedExercise ( plannedDeclineSitUps );
 
-        return this.planService.save ( plan );
+        final PlanSearchParameter planSearchParameter = new PlanSearchParameter ();
+        planSearchParameter.setName ( FULL_BODY_TRAINING_PLAN_NAME );
+
+        return planService.findOneBySearchParameter ( planSearchParameter )
+                .switchIfEmpty ( planService.save ( plan ) )
+                .doOnSuccess ( this::logPlanInfo )
+                .doOnError ( throwable -> LOGGER.error ( "Failed to createOrUpdateFullBodyTrainingPlan", throwable ) );
     }
 
     /**
