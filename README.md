@@ -1,8 +1,131 @@
 # Set up NoSQLClient
 
-1. Start docker compose
-2. Navigate to http://localhost:3000/
-3. Choose connect, create a new connection and provide the following URL
+1. Start docker compose using
+```
+docker-compose -f docker-compose-backend-infrastructure up
+```
+2. If an error occurs its probably caused by the network not having been created. Use `docker network create web` 
+3. Navigate to http://localhost:3000/
+4. Choose connect, create a new connection and provide the following URL
 ```
 mongodb://root:zc4HtSXmFSdGU4va@mongodb:27017/fitness-app?authSource=admin
+```
+
+# Example Session
+```json
+{
+    "plan":{
+        "identifier":"7d1aaa01-907a-11e9-9128-918590f0bf80"
+    },
+    "completedExercises":[
+        {
+            "plannedExercise":{
+                "exercise":{
+                    "identifier":"7cf7b8b0-907a-11e9-9128-918590f0bf80"
+                },
+                "numOfRepetitions":5,
+                "repetitionUnit":"NUMBER",
+                "numOfSets":3,
+                "breakDurationInSeconds":60,
+                "intensityLevel":30,
+                "intensityUnit":"WEIGHT",
+                "aimUnit":"STRENGTH"
+            },
+            "numOfRepetitions":5,
+            "numOfSets":2,
+            "breakDurationInSeconds":120,
+            "intensityLevel":30
+        },
+        {
+            "plannedExercise":{
+                "exercise":{
+                    "identifier":"7cf7919f-907a-11e9-9128-918590f0bf80"
+                },
+                "numOfRepetitions":5,
+                "repetitionUnit":"NUMBER",
+                "numOfSets":3,
+                "breakDurationInSeconds":60,
+                "intensityLevel":30,
+                "intensityUnit":"WEIGHT",
+                "aimUnit":"STRENGTH"
+            },
+            "numOfRepetitions":5,
+            "numOfSets":3,
+            "breakDurationInSeconds":60,
+            "intensityLevel":30
+        },
+        {
+            "plannedExercise":{
+                "exercise":{
+                    "identifier":"7cf7919e-907a-11e9-9128-918590f0bf80"
+                },
+                "numOfRepetitions":5,
+                "repetitionUnit":"NUMBER",
+                "numOfSets":3,
+                "breakDurationInSeconds":60,
+                "intensityLevel":30,
+                "intensityUnit":"WEIGHT",
+                "aimUnit":"STRENGTH"
+            },
+            "numOfRepetitions":5,
+            "numOfSets":3,
+            "breakDurationInSeconds":60,
+            "intensityLevel":30
+        },
+        {
+            "plannedExercise":{
+                "exercise":{
+                    "identifier":"7cf76a8d-907a-11e9-9128-918590f0bf80"
+                },
+                "numOfRepetitions":5,
+                "repetitionUnit":"NUMBER",
+                "numOfSets":3,
+                "breakDurationInSeconds":60,
+                "intensityLevel":30,
+                "intensityUnit":"WEIGHT",
+                "aimUnit":"STRENGTH"
+            },
+            "numOfRepetitions":5,
+            "numOfSets":3,
+            "breakDurationInSeconds":60,
+            "intensityLevel":30
+        },
+        {
+            "plannedExercise":{
+                "exercise":{
+                    "identifier":"7cf76a8b-907a-11e9-9128-918590f0bf80"
+                },
+                "numOfRepetitions":5,
+                "repetitionUnit":"NUMBER",
+                "numOfSets":3,
+                "breakDurationInSeconds":60,
+                "intensityLevel":30,
+                "intensityUnit":"WEIGHT",
+                "aimUnit":"STRENGTH"
+            },
+            "numOfRepetitions":5,
+            "numOfSets":3,
+            "breakDurationInSeconds":60,
+            "intensityLevel":30
+        },
+        {
+            "plannedExercise":{
+                "exercise":{
+                    "identifier":"7cf76a8c-907a-11e9-9128-918590f0bf80"
+                },
+                "numOfRepetitions":5,
+                "repetitionUnit":"NUMBER",
+                "numOfSets":3,
+                "breakDurationInSeconds":60,
+                "intensityLevel":30,
+                "intensityUnit":"WEIGHT",
+                "aimUnit":"STRENGTH"
+            },
+            "numOfRepetitions":5,
+            "numOfSets":3,
+            "breakDurationInSeconds":60,
+            "intensityLevel":30
+        }
+    ]
+}
 ```

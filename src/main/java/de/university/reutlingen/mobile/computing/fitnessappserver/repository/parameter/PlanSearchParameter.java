@@ -1,26 +1,12 @@
 package de.university.reutlingen.mobile.computing.fitnessappserver.repository.parameter;
 
+/**
+ * Search parameter for {@link de.university.reutlingen.mobile.computing.fitnessappserver.model.Plan Plans}.
+ */
 public class PlanSearchParameter {
 
-    private String name;
+    public String name;
 
-    private String identifier;
-
-    public String getName () {
-        return name;
-    }
-
-    public void setName ( String name ) {
-        this.name = name;
-    }
-
-    public String getIdentifier () {
-        return identifier;
-    }
-
-    public void setIdentifier ( String identifier ) {
-        this.identifier = identifier;
-    }
-
+    public String identifier;
 
 }

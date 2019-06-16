@@ -1,7 +1,14 @@
-package de.university.reutlingen.mobile.computing.fitnessappserver.model;
+package de.university.reutlingen.mobile.computing.fitnessappserver.model.embeddable;
+
+import de.university.reutlingen.mobile.computing.fitnessappserver.model.Exercise;
+import de.university.reutlingen.mobile.computing.fitnessappserver.model.unit.AimUnit;
+import de.university.reutlingen.mobile.computing.fitnessappserver.model.unit.IntensityUnit;
+import de.university.reutlingen.mobile.computing.fitnessappserver.model.unit.RepetitionUnit;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 public class PlannedExercise {
 
+    @DBRef
     private Exercise exercise;
 
     private Integer numOfRepetitions;

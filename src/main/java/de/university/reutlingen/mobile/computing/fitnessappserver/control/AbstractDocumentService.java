@@ -8,19 +8,21 @@ import java.io.Serializable;
 
 /**
  * Base interface for all control services.
+ *
  * @param <D> type of the document
  * @param <R> type of repository
  */
-public interface AbstractDocumentService<D extends AbstractDocument, P extends Serializable,R extends ReactiveMongoRepository<D, P>> {
+public interface AbstractDocumentService<D extends AbstractDocument, P extends Serializable, R extends ReactiveMongoRepository<D, P>> {
 
     /**
      * Save the given document and return the result
+     *
      * @param document
+     *
      * @return
      */
-    Mono<D> save ( D document);
+    Mono<D> save ( D document );
 
-    R getRepository();
+    R getRepository ();
 
-    P generateId();
 }

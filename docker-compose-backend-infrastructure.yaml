@@ -7,18 +7,22 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: zc4HtSXmFSdGU4va
       MONGO_INITDB_DATABASE: fitness-app
+    volumes:
+      - /Users/pgerhard/DevTools/gitrepo/fitness-app-server/docker_data/mongo_db:/data/db
     networks:
-    - default
-    - web
+      - default
+      - web
     ports:
-    - 27017:27017
+      - 27017:27017
 
   mongoclient:
     image: mongoclient/mongoclient
     restart: always
     environment:
-      - MONGO_INITDB_ROOT_USERNAME="root"
-      - MONGO_INITDB_ROOT_PASSWORD="zc4HtSXmFSdGU4va"
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: zc4HtSXmFSdGU4va
+    volumes:
+      - /Users/pgerhard/DevTools/gitrepo/fitness-app-server/docker_data/mongo_db_client:/data/db
     networks:
       - default
       - web

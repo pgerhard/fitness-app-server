@@ -1,4 +1,4 @@
-package de.university.reutlingen.mobile.computing.fitnessappserver.model;
+package de.university.reutlingen.mobile.computing.fitnessappserver.model.unit;
 
 public enum IntensityUnit {
 

@@ -24,12 +24,12 @@ public class PlanManagementServiceImpl implements PlanManagementService {
     @Override
     public Mono<Plan> findOneByIdentifier ( String identifier ) {
         final PlanSearchParameter planSearchParameter = new PlanSearchParameter ();
-        planSearchParameter.setIdentifier ( identifier );
+        planSearchParameter.identifier = identifier;
         return planService.findOneBySearchParameter ( planSearchParameter );
     }
 
     private PlanReferenceDto mapPlanToPlanReference ( Plan plan ) {
-        return new PlanReferenceDto ( plan.getName (), plan.getId () );
+        return new PlanReferenceDto ( plan.getName (), plan.getIdentifier ().toString () );
     }
 
 }

@@ -2,15 +2,17 @@ package de.university.reutlingen.mobile.computing.fitnessappserver.control.impl;
 
 import de.university.reutlingen.mobile.computing.fitnessappserver.control.ExerciseService;
 import de.university.reutlingen.mobile.computing.fitnessappserver.model.Exercise;
-import de.university.reutlingen.mobile.computing.fitnessappserver.model.ExerciseType;
+import de.university.reutlingen.mobile.computing.fitnessappserver.model.unit.ExerciseType;
 import de.university.reutlingen.mobile.computing.fitnessappserver.repository.ExerciseRepository;
+import de.university.reutlingen.mobile.computing.fitnessappserver.repository.parameter.ExerciseSearchParameter;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Example;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-public class ExerciseServiceImpl extends AbstractDocumentServiceImpl<Exercise, String, ExerciseRepository> implements ExerciseService {
+public class ExerciseServiceImpl extends AbstractDocumentServiceImpl<Exercise, ObjectId, ExerciseRepository> implements ExerciseService {
 
     private final ExerciseRepository exerciseRepository;
 
@@ -21,18 +23,18 @@ public class ExerciseServiceImpl extends AbstractDocumentServiceImpl<Exercise, S
     @Override
     public Mono<Exercise> findOneByNameAndType ( String name, ExerciseType exerciseType ) {
         return getRepository ().findOne ( Example.of ( new Exercise ( name, null, exerciseType ) ) );
-    };
+    }
+
+    ;
 
     @Override
-    public Mono<Exercise> findOneByIdentifier ( String identifier ) {
-        final Exercise probe = new Exercise ();
-        probe.setId ( identifier );
-        return getRepository ().findOne ( Example.of ( probe ) );
+    public Mono<Exercise> findOneByIdentifier ( ExerciseSearchParameter searchParameter ) {
+        return getRepository ().findOne ( Example.of ( buildProbe ( searchParameter ) ) );
     }
 
     @Override
-    protected void doSave ( Exercise document ) {
-        // nothing to do
+    public Flux<Exercise> findAll () {
+        return this.exerciseRepository.findAll ();
     }
 
     @Override
@@ -40,13 +42,12 @@ public class ExerciseServiceImpl extends AbstractDocumentServiceImpl<Exercise, S
         return this.exerciseRepository;
     }
 
-    @Override
-    public String generateId () {
-        return UUID.randomUUID ().toString ();
-    }
+    private Exercise buildProbe ( ExerciseSearchParameter searchParameter ) {
+        final Exercise probe = new Exercise ();
 
-    @Override
-    public Flux<Exercise> findAll () {
-        return this.exerciseRepository.findAll ();
+        if ( searchParameter.identifier != null ) {
+            probe.setIdentifier ( UUID.fromString ( searchParameter.identifier ) );
+        }
+        return probe;
     }
 }

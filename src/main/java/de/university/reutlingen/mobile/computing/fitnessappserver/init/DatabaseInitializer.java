@@ -3,19 +3,30 @@ package de.university.reutlingen.mobile.computing.fitnessappserver.init;
 
 import de.university.reutlingen.mobile.computing.fitnessappserver.control.ExerciseService;
 import de.university.reutlingen.mobile.computing.fitnessappserver.control.PlanService;
+import de.university.reutlingen.mobile.computing.fitnessappserver.control.UserService;
 import de.university.reutlingen.mobile.computing.fitnessappserver.model.*;
+import de.university.reutlingen.mobile.computing.fitnessappserver.model.embeddable.PlannedExercise;
+import de.university.reutlingen.mobile.computing.fitnessappserver.model.embeddable.User;
+import de.university.reutlingen.mobile.computing.fitnessappserver.model.unit.AimUnit;
+import de.university.reutlingen.mobile.computing.fitnessappserver.model.unit.ExerciseType;
+import de.university.reutlingen.mobile.computing.fitnessappserver.model.unit.IntensityUnit;
+import de.university.reutlingen.mobile.computing.fitnessappserver.model.unit.RepetitionUnit;
 import de.university.reutlingen.mobile.computing.fitnessappserver.repository.parameter.PlanSearchParameter;
+import de.university.reutlingen.mobile.computing.fitnessappserver.security.FitnessAppServerAuthorities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
+/**
+ * Initializer for the database.
+ */
 public class DatabaseInitializer extends AbstractInitializationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger ( DatabaseInitializer.class );
@@ -29,6 +40,9 @@ public class DatabaseInitializer extends AbstractInitializationService {
 
     private final ExerciseService exerciseService;
     private final PlanService planService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * Constructor for required fields.
@@ -51,19 +65,24 @@ public class DatabaseInitializer extends AbstractInitializationService {
     protected void createDummyData () {
         createOrUpdateSystemExercises ()
                 .collectMap ( Exercise::getName, exercise -> exercise )
-                .flatMap ( this::createOrUpdateFullBodyTrainingPlan )
+                .flatMap ( this::createOrLoadFullBodyTrainingPlan )
+                .doOnError ( Throwable::printStackTrace )
+                .then ( this.createOrLoadDefaultUser () )
+                .then ( this.createOrLoadCarstenHummel () )
+                .then ( this.createOrLoadYeeunPark () )
+                .then ( this.createOrLoadErikaMueller () )
                 .subscribe ();
     }
 
     private void logExerciseInfo ( @NotNull Exercise exercise ) {
-        LOGGER.debug ( String.format ( "Exercise created:\n Name: %s\n ID: %s", exercise.getName (), exercise.getId () ) );
+        LOGGER.debug ( String.format ( "Exercise created:\n Name: %s\n ID: %s", exercise.getName (), exercise.getIdentifier () ) );
     }
 
     private void logPlanInfo ( Plan plan ) {
-        LOGGER.debug ( String.format ( "Plan created:\n Name: %s\n ID: %s", plan.getName (), plan.getId () ) );
+        LOGGER.debug ( String.format ( "Plan created:\n Name: %s\n ID: %s", plan.getName (), plan.getIdentifier () ) );
     }
 
-    private Mono<Plan> createOrUpdateFullBodyTrainingPlan ( Map<String, Exercise> exerciseList ) {
+    private Mono<Plan> createOrLoadFullBodyTrainingPlan ( Map<String, Exercise> exerciseList ) {
         final Plan plan = new Plan ();
         plan.setName ( FULL_BODY_TRAINING_PLAN_NAME );
 
@@ -141,7 +160,7 @@ public class DatabaseInitializer extends AbstractInitializationService {
         plan.addPlannedExercise ( plannedDeclineSitUps );
 
         final PlanSearchParameter planSearchParameter = new PlanSearchParameter ();
-        planSearchParameter.setName ( FULL_BODY_TRAINING_PLAN_NAME );
+        planSearchParameter.name = FULL_BODY_TRAINING_PLAN_NAME;
 
         return planService.findOneBySearchParameter ( planSearchParameter )
                 .switchIfEmpty ( planService.save ( plan ) )
@@ -157,20 +176,20 @@ public class DatabaseInitializer extends AbstractInitializationService {
     private Flux<Exercise> createOrUpdateSystemExercises () {
         return Flux.merge (
                 // Bench Press
-                createOrUpdateBenchPress (),
+                createOrLoadBenchPress (),
                 // Military Press
-                createOrUpdateMilitaryPress (),
+                createOrLoadMilitaryPress (),
                 // Squats
-                createOrUpdateSquats (),
+                createOrLoadSquats (),
                 // Lat pulldowns
-                createOrUpdateLatPulldowns (),
+                createOrLoadLatPulldowns (),
                 // Dumbell curls
-                createOrUpdateDumbbellCurls (),
+                createOrLoadDumbbellCurls (),
                 // Decline sit ups
-                createOrUpdateDeclineSitUps () );
+                createOrLoadDeclineSitUps () );
     }
 
-    private Mono<Exercise> createOrUpdateBenchPress () {
+    private Mono<Exercise> createOrLoadBenchPress () {
         final String description = "The bench press is an upper-body strength-training exercise that consists of pressing a weight upwards from a supine " +
                 "position.\n The person performing the exercise lies on their back on a bench with a weight grasped in both hands. " +
                 "They push the weight upwards until their arms are extended, not allowing the elbows to lock. " +
@@ -182,7 +201,7 @@ public class DatabaseInitializer extends AbstractInitializationService {
                 .doOnError ( throwable -> LOGGER.error ( "Failed to createOrUpdateBenchPress", throwable ) );
     }
 
-    private Mono<Exercise> createOrUpdateMilitaryPress () {
+    private Mono<Exercise> createOrLoadMilitaryPress () {
         final String description = "The military press is a weight training exercise with many variations, typically performed while standing, " +
                 "in which a weight is pressed straight upwards from racking position until the arms are locked out overhead, " +
                 "while the legs, lower back and abs maintain balance. The person performin the exercise lies stands with their heels together and puts the " +
@@ -195,7 +214,7 @@ public class DatabaseInitializer extends AbstractInitializationService {
                 .doOnError ( throwable -> LOGGER.error ( "Failed to createOrUpdateMilitaryPress", throwable ) );
     }
 
-    private Mono<Exercise> createOrUpdateSquats () {
+    private Mono<Exercise> createOrLoadSquats () {
         final String description = "The squat is a compound, full-body exercise that primarily trains the muscles of the thighs, hips and buttocks, " +
                 "quadriceps femoris muscle and hamstrings. At the start of the movement stand with feet slightly wider apart than hip width. If using a " +
                 "barbell as a weight lay it across the back of the shoulders. Keeping the upper body facing forward squat down until the top of the thighs " +
@@ -207,7 +226,7 @@ public class DatabaseInitializer extends AbstractInitializationService {
                 .doOnError ( throwable -> LOGGER.error ( "Failed to createOrUpdateSquats", throwable ) );
     }
 
-    private Mono<Exercise> createOrUpdateLatPulldowns () {
+    private Mono<Exercise> createOrLoadLatPulldowns () {
         final String description = "The lat pulldown is a strength training exercise designed to develop the latissimus dorsi muscle. Sit at the pulldown " +
                 "machine with thighs braced, back straight and feet flat on the floor. Hold the arms overhead at full extension, grasping the bar connected " +
                 "to the weight stacks. Pull the bar down until it touches the chest, then slowly return to the starting position.";
@@ -218,7 +237,7 @@ public class DatabaseInitializer extends AbstractInitializationService {
                 .doOnError ( throwable -> LOGGER.error ( "Failed to createOrUpdateLatPulldowns", throwable ) );
     }
 
-    private Mono<Exercise> createOrUpdateDumbbellCurls () {
+    private Mono<Exercise> createOrLoadDumbbellCurls () {
         final String description = "Dumbbell curls are a strength exercise to target the biceps brachii muscle. Stand with upright holding the dumbbell in " +
                 "one hand with supine grip. Use the bicep to lift the weight upward in an arc until no further movement is possible. Then lower the weight " +
                 "back to the starting position.";
@@ -229,7 +248,7 @@ public class DatabaseInitializer extends AbstractInitializationService {
                 .doOnError ( throwable -> LOGGER.error ( "Failed to createOrUpdateDumbbellCurls", throwable ) );
     }
 
-    private Mono<Exercise> createOrUpdateDeclineSitUps () {
+    private Mono<Exercise> createOrLoadDeclineSitUps () {
         final String description = "Decline sit ups are a strength exercise that target the abdominal muscles. Before beginning set the decline bench to an" +
                 " angle of between 30 and 45 degrees. Sit on the bench with the lower legs hanging off the elevated end of the bench. " +
                 "Lie flat on the bench and cross the arms over the chest. Raise the upper body until it is vertical then lower back down to lie flat.";
@@ -239,4 +258,61 @@ public class DatabaseInitializer extends AbstractInitializationService {
                 .doOnSuccess ( this::logExerciseInfo )
                 .doOnError ( throwable -> LOGGER.error ( "Failed to createOrUpdateDeclineSitUps", throwable ) );
     }
+
+    private Mono<UserWithPassword> createOrLoadDefaultUser () {
+        final String username = "user";
+
+        final UserWithPassword userWithPassword = new UserWithPassword ();
+        final User user = new User ();
+        user.setUsername ( username );
+        user.setFirstName ( "Root" );
+        user.setLastName ( "User" );
+        user.setGrantedAuthorities ( Collections.singletonList ( FitnessAppServerAuthorities.ADMIN ) );
+        userWithPassword.setUser ( user );
+        userWithPassword.setPassword ( "8d7910b0-7564-4ba6-9227-2f501049536f" );
+        return this.userService.loadUserByUsername ( username ).switchIfEmpty ( this.userService.save ( userWithPassword ) );
+    }
+
+    private Mono<UserWithPassword> createOrLoadCarstenHummel () {
+        final String username = "chummel";
+        final UserWithPassword carstenHummel = new UserWithPassword ();
+        final User user = new User ();
+        user.setFirstName ( "Carsten" );
+        user.setLastName ( "Hummel" );
+        user.setUsername ( username );
+        user.setGrantedAuthorities ( Collections.singletonList ( FitnessAppServerAuthorities.USER ) );
+        carstenHummel.setUser ( user );
+        carstenHummel.setPassword ( "X@tjvcwxybnCM87MRZ6arguaC" );
+
+        return this.userService.loadUserByUsername ( username ).switchIfEmpty ( this.userService.save ( carstenHummel ) );
+    }
+
+    private Mono<UserWithPassword> createOrLoadYeeunPark () {
+        final String username = "ypark";
+        final UserWithPassword yeeunPark = new UserWithPassword ();
+        final User user = new User ();
+        user.setFirstName ( "Ye-eun" );
+        user.setLastName ( "Park" );
+        user.setUsername ( username );
+        user.setGrantedAuthorities ( Collections.singletonList ( FitnessAppServerAuthorities.USER ) );
+        yeeunPark.setUser ( user );
+        yeeunPark.setPassword ( "ZFDJVd9@DaL7-AX8kD6eUcCXV" );
+
+        return this.userService.loadUserByUsername ( username ).switchIfEmpty ( this.userService.save ( yeeunPark ) );
+    }
+
+    private Mono<UserWithPassword> createOrLoadErikaMueller () {
+        final String username = "emueller";
+        final UserWithPassword erikaMueller = new UserWithPassword ();
+        final User user = new User ();
+        user.setFirstName ( "Erika" );
+        user.setLastName ( "Müller" );
+        user.setUsername ( username );
+        user.setGrantedAuthorities ( Collections.singletonList ( FitnessAppServerAuthorities.USER ) );
+        erikaMueller.setUser ( user );
+        erikaMueller.setPassword ( "gPcM94upsriYLe3VzT27qh_34" );
+
+        return this.userService.loadUserByUsername ( username ).switchIfEmpty ( this.userService.save ( erikaMueller ) );
+    }
+
 }

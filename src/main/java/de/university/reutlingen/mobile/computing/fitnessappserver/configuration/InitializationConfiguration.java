@@ -14,4 +14,5 @@ public class InitializationConfiguration {
     public DatabaseInitializer databaseInitializer( FitnessAppProperties properties, ExerciseService exerciseService, PlanService planService ){
         return new DatabaseInitializer (properties.isProductionMode (), exerciseService, planService);
     }
+
 }

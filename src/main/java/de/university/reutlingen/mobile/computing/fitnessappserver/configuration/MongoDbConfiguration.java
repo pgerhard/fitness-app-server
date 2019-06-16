@@ -1,27 +1,24 @@
 package de.university.reutlingen.mobile.computing.fitnessappserver.configuration;
 
-import com.mongodb.reactivestreams.client.MongoClient;
-import com.mongodb.reactivestreams.client.MongoClients;
+import de.university.reutlingen.mobile.computing.fitnessappserver.model.converter.StringToGrantedAuthoritiesConverter;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.mongodb.config.AbstractReactiveMongoConfiguration;
-import org.springframework.data.mongodb.config.EnableMongoAuditing;
-import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.convert.CustomConversions;
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
+
+import java.util.ArrayList;
 
 /**
  * Configuration to
  */
-@EnableReactiveMongoRepositories
-public class MongoDbConfiguration extends AbstractReactiveMongoConfiguration {
-
+@Configuration
+public class MongoDbConfiguration {
 
     @Bean
-    @Override
-    public MongoClient reactiveMongoClient () {
-        return MongoClients.create ();
-    }
-
-    @Override
-    protected String getDatabaseName () {
-        return "fitness-app";
+    public MongoCustomConversions customConversions() {
+        final ArrayList<Converter<?,?>> converters = new ArrayList<> ();
+        converters.add ( new StringToGrantedAuthoritiesConverter () );
+        return new MongoCustomConversions ( converters );
     }
 }

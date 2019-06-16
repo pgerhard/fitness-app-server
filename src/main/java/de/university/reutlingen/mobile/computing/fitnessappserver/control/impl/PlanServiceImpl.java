@@ -4,13 +4,14 @@ import de.university.reutlingen.mobile.computing.fitnessappserver.control.PlanSe
 import de.university.reutlingen.mobile.computing.fitnessappserver.model.Plan;
 import de.university.reutlingen.mobile.computing.fitnessappserver.repository.PlanRepository;
 import de.university.reutlingen.mobile.computing.fitnessappserver.repository.parameter.PlanSearchParameter;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Example;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-public class PlanServiceImpl extends AbstractDocumentServiceImpl<Plan, String, PlanRepository> implements PlanService {
+public class PlanServiceImpl extends AbstractDocumentServiceImpl<Plan, ObjectId, PlanRepository> implements PlanService {
 
     private final PlanRepository planRepository;
 
@@ -25,15 +26,7 @@ public class PlanServiceImpl extends AbstractDocumentServiceImpl<Plan, String, P
 
     @Override
     public Mono<Plan> findOneBySearchParameter ( PlanSearchParameter planSearchParameter ) {
-        Plan probe = new Plan ();
-        probe.setName ( planSearchParameter.getName () );
-        probe.setId ( planSearchParameter.getIdentifier () );
-        return planRepository.findOne ( Example.of ( probe ) );
-    }
-
-    @Override
-    protected void doSave ( Plan document ) {
-        // nothing to do
+        return planRepository.findOne ( Example.of ( buildProbe ( planSearchParameter ) ) ).doOnError ( Throwable::printStackTrace );
     }
 
     @Override
@@ -41,8 +34,17 @@ public class PlanServiceImpl extends AbstractDocumentServiceImpl<Plan, String, P
         return this.planRepository;
     }
 
-    @Override
-    public String generateId () {
-        return UUID.randomUUID ().toString ();
+    private Plan buildProbe ( PlanSearchParameter planSearchParameter ) {
+        Plan probe = new Plan ();
+
+        if ( planSearchParameter.name != null ) {
+            probe.setName ( planSearchParameter.name );
+        }
+
+        if ( planSearchParameter.identifier != null ) {
+            probe.setIdentifier ( UUID.fromString ( planSearchParameter.identifier ) );
+        }
+        return probe;
     }
+
 }

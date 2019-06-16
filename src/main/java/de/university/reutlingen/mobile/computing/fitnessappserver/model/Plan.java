@@ -1,9 +1,14 @@
 package de.university.reutlingen.mobile.computing.fitnessappserver.model;
 
+import de.university.reutlingen.mobile.computing.fitnessappserver.model.embeddable.PlannedExercise;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Plan extends AbstractDocument<String> {
+@Document
+public class Plan extends AbstractDocument<ObjectId> {
 
     private String name;
 

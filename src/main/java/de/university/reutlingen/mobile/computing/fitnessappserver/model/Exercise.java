@@ -1,13 +1,13 @@
 package de.university.reutlingen.mobile.computing.fitnessappserver.model;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import de.university.reutlingen.mobile.computing.fitnessappserver.model.unit.ExerciseType;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Document
-public class Exercise extends AbstractDocument<String> {
+public class Exercise extends AbstractDocument<ObjectId> {
 
     private String name;
 
