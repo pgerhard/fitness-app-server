@@ -269,7 +269,7 @@ public class DatabaseInitializer extends AbstractInitializationService {
         user.setLastName ( "User" );
         user.setGrantedAuthorities ( Collections.singletonList ( FitnessAppServerAuthorities.ADMIN ) );
         userWithPassword.setUser ( user );
-        userWithPassword.setPassword ( "8d7910b0-7564-4ba6-9227-2f501049536f" );
+        userWithPassword.setPassword ( "uniReutlingen2019!" );
         return this.userService.loadUserByUsername ( username ).switchIfEmpty ( this.userService.save ( userWithPassword ) );
     }
 

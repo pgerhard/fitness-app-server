@@ -6,7 +6,7 @@ import de.university.reutlingen.mobile.computing.fitnessappserver.model.unit.Rep
 
 public class PlannedExerciseDto {
 
-    public ExerciseReferenceDto exercise;
+    public ExerciseDetailDto exercise;
 
     public Integer numOfRepetitions;
 
@@ -21,4 +21,5 @@ public class PlannedExerciseDto {
     public IntensityUnit intensityUnit;
 
     public AimUnit aimUnit;
+
 }

@@ -103,31 +103,9 @@ public class SessionManagementServiceImpl implements SessionManagementService {
                 } )
                 .map ( CreateSessionHandler::build )
                 // Store new completed exercises
-//                .map ( session ->  )
                 .flatMap ( this.sessionService::save )
                 .map ( SessionManagementServiceImpl::mapToDto )
                 .doOnError ( Throwable::printStackTrace );
-    }
-
-    private CompletedExercise convertToCompletedExercise ( CompletedExerciseDto completedExerciseDto ) {
-
-        Mono.fromSupplier ( () -> {
-            final ExerciseSearchParameter searchParameter = new ExerciseSearchParameter ();
-            searchParameter.identifier = completedExerciseDto.plannedExercise.exercise.identifier;
-            return searchParameter;
-        } )
-                .flatMap ( searchParameter -> exerciseService.findOneByIdentifier ( searchParameter ) )
-                .map ( exercise -> {
-                    final CompletedExercise completedExercise = new CompletedExercise ();
-
-
-                    return completedExercise;
-                } );
-
-        final ExerciseSearchParameter searchParameter = new ExerciseSearchParameter ();
-        searchParameter.identifier = completedExerciseDto.plannedExercise.exercise.identifier;
-        exerciseService.findOneByIdentifier ( searchParameter );
-        return new CompletedExercise ();
     }
 
     private static SessionReferenceDto mapToDto ( Session session ) {

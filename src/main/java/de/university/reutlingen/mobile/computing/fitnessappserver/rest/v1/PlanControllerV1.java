@@ -2,6 +2,7 @@ package de.university.reutlingen.mobile.computing.fitnessappserver.rest.v1;
 
 import de.university.reutlingen.mobile.computing.fitnessappserver.boundary.PlanManagementService;
 import de.university.reutlingen.mobile.computing.fitnessappserver.model.Plan;
+import de.university.reutlingen.mobile.computing.fitnessappserver.rest.v1.model.PlanDto;
 import de.university.reutlingen.mobile.computing.fitnessappserver.rest.v1.model.PlanReferenceDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +43,7 @@ public class PlanControllerV1 {
      * @return the plan
      */
     @GetMapping (path = "/{identifier}")
-    public Mono<Plan> loadOneByIdentifier( @PathVariable ("identifier") String identifier) {
+    public Mono<PlanDto> loadOneByIdentifier( @PathVariable ("identifier") String identifier) {
         return delegate.findOneByIdentifier ( identifier );
     }
 }

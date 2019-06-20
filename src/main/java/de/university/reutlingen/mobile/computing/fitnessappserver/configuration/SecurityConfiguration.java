@@ -2,6 +2,8 @@ package de.university.reutlingen.mobile.computing.fitnessappserver.configuration
 
 import de.university.reutlingen.mobile.computing.fitnessappserver.control.UserService;
 import de.university.reutlingen.mobile.computing.fitnessappserver.repository.UserRepository;
+import de.university.reutlingen.mobile.computing.fitnessappserver.security.SimpleServerAuthenticationFailureHandler;
+import de.university.reutlingen.mobile.computing.fitnessappserver.security.SimpleServerAuthenticationSuccessHandler;
 import de.university.reutlingen.mobile.computing.fitnessappserver.util.ContextPathWebFilter;
 import io.micrometer.core.ipc.http.HttpSender;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
@@ -33,9 +35,9 @@ public class SecurityConfiguration {
                 .authenticated ()
             .and ()
                 .formLogin ()
-//                    .loginPage ( serverProperties.getServlet ().getContextPath () + "/login" )
                     .loginPage ( "/login" )
-                    .authenticationSuccessHandler ( new RedirectServerAuthenticationSuccessHandler ( serverProperties.getServlet ().getContextPath () + "/api/v1/exercises" ) )
+                    .authenticationSuccessHandler ( new SimpleServerAuthenticationSuccessHandler () )
+                    .authenticationFailureHandler ( new SimpleServerAuthenticationFailureHandler () )
             .and ()
                 .csrf ().disable ()
             .addFilterAt ( new ContextPathWebFilter ( "/fitness-app" ), SecurityWebFiltersOrder.FIRST );

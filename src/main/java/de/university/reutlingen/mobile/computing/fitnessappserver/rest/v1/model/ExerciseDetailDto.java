@@ -1,12 +1,11 @@
 package de.university.reutlingen.mobile.computing.fitnessappserver.rest.v1.model;
 
-public class UserDto {
+public class ExerciseDetailDto {
 
     public String identifier;
 
-    public String firstName;
+    public String description;
 
-    public String lastName;
+    public String name;
 
-    public String username;
 }
