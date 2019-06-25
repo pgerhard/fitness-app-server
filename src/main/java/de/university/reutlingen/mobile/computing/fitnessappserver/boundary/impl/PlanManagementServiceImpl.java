@@ -42,6 +42,7 @@ public class PlanManagementServiceImpl implements PlanManagementService {
         planDto.exerciseList = plan.getExerciseList ().stream ()
                 .map ( plannedExercise -> {
                     final ExerciseDetailDto exerciseDetailDto = new ExerciseDetailDto ();
+                    exerciseDetailDto.identifier = plannedExercise.getExercise().getIdentifier().toString();
                     exerciseDetailDto.name = plannedExercise.getExercise ().getName ();
                     exerciseDetailDto.description = plannedExercise.getExercise ().getDescription ();
 

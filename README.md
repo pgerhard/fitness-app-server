@@ -20,7 +20,7 @@ mongodb://root:zc4HtSXmFSdGU4va@mongodb:27017/fitness-app?authSource=admin
     "completedExercises":[
         {
             "plannedExercise":{
-                "exercise":{
+                    "exercise":{
                     "identifier":"7cf7b8b0-907a-11e9-9128-918590f0bf80"
                 },
                 "numOfRepetitions":5,

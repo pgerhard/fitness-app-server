@@ -1,0 +1,26 @@
+{
+  "plan": {
+    "identifier": "ed64ed19-9264-11e9-b7aa-6b0fe24bfef5"
+  },
+  "completedExercises": [
+    {
+      "plannedExercise": {
+        "exercise": {
+          "identifier": "ed399758-9264-11e9-b7aa-6b0fe24bfef5"
+        },
+        "numOfRepetitions": "5",
+        "aimUnit": "STRENGTH",
+        "breakDurationInSeconds": "60",
+        "intensityLevel": "32.5",
+        "intensityUnit": "WEIGHT",
+        "numOfSets": "3",
+        "repetitionUnit": "NUMBER"
+      },
+      "breakDurationInSeconds": "60",
+      "intensityLevel": "32.5",
+      "numOfRepetitions": "5",
+      "numOfSets": "3"
+    }
+  ]
+}
+
